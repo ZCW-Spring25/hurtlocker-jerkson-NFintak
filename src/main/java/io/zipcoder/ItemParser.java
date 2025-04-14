@@ -19,7 +19,7 @@ public class ItemParser {
             try {
                 item = parseSingleItem(items);
             } catch (ItemParseException e) {
-                invalidItem++;
+                this.invalidItem++;
             }
             if (item != null) {
                 groceryList.add(item);

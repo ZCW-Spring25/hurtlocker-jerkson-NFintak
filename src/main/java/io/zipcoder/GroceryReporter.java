@@ -39,9 +39,20 @@ public class GroceryReporter {
             }
         }
         for (Item items : groceryList) {
-            if (!fullList.contains(items.getName())) {
+            String itemName = items.getName().replace(items.getName().substring(0, 1), items.getName().substring(0, 1).toUpperCase());
+            if (!fullList.contains(itemName)) {
                 fullList += ("name:") + (nameWS.substring(0, nameWS.length() - items.getName().length()))
-                        + (items.getName()) + ("\t \t ") + ("seen: ") + ((nameFreq.get(items.getName())));
+                        + (itemName)
+                        + (" \t\t ") + ("seen: ") + ((nameFreq.get(items.getName())));
+                if (nameFreq.get(items.getName()) < 2) {
+                    fullList += " time\n";
+                } else {
+                    fullList += " times\n";
+                }
+                fullList += "============= \t\t =============\n";
+                //still need to troubleshoot issue w milk only appearing 5 times instead of 6 -
+                //and cookies only appearing 8 times.
+                //have another loop to add the prices and number of appearances to the list
             }
         }
         //make an if statement that checks if the item's name is already in the stringbuilder,
