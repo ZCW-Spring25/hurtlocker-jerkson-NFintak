@@ -2,11 +2,9 @@ package io.zipcoder;
 
 import io.zipcoder.utils.FileReader;
 import io.zipcoder.utils.Item;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 public class GroceryReporter {
     private final String originalFileText;
@@ -17,22 +15,39 @@ public class GroceryReporter {
 
     @Override
     public String toString() {
-        String whiteSpace = "        ";
-        StringBuilder str = new StringBuilder();
+        String nameWS = "        ";
+        String priceWS = "       ";
+        String fullList = "";
         ItemParser itemParser = new ItemParser();
         int errors = itemParser.invalidItem;
         List<Item> groceryList = itemParser.parseItemList(this.originalFileText);
-        //need to take every item and append the name, name-appearances (\n),
-        // price(s), and price-appearances (\n)
-        //end with number of errors found
+        HashMap<String, Integer> nameFreq = new HashMap<>();
+        HashMap<String, Integer> priceFreq = new HashMap<>();
         for (Item items : groceryList) {
-            str.append("name:").append(whiteSpace.substring(0, whiteSpace.length() - items.getName().length()))
-                    .append(items.getName().replace(items.getName().substring(0, 1), items.getName().substring(0, 1).toUpperCase()))
-                    .append("\t\tseen: ");
-            //write if statement for num of times a price appears, if > 1 append "times\n", else append "time\n"
+            if (!nameFreq.containsKey(items.getName())) {
+                nameFreq.put(items.getName(), 1);
+            } else {
+                nameFreq.put(items.getName(), nameFreq.get(items.getName()) + 1);
+            }
         }
+        for (Item items : groceryList) {
+            String nameAndPrice = items.getName() + items.getPrice();
+            if (!priceFreq.containsKey(nameAndPrice)) {
+                priceFreq.put(nameAndPrice, 1);
+            } else {
+                priceFreq.put(nameAndPrice, priceFreq.get(nameAndPrice) + 1);
+            }
+        }
+        for (Item items : groceryList) {
+            if (!fullList.contains(items.getName())) {
+                fullList += ("name:") + (nameWS.substring(0, nameWS.length() - items.getName().length()))
+                        + (items.getName()) + ("\t \t ") + ("seen: ") + ((nameFreq.get(items.getName())));
+            }
+        }
+        //make an if statement that checks if the item's name is already in the stringbuilder,
+        //if isn't, start adding the info to the stringbuilder. if it is, skip over it.
 
-        str.append("Errors         \t \t seen: ").append(errors).append(" times\n");
-        return str.toString();
+        fullList += ("Errors         \t \t seen: ") + (errors) + (" times\n");
+        return fullList;
     }
 }
