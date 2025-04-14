@@ -9,8 +9,9 @@ import java.util.regex.Matcher;
 import java.util.List;
 
 public class ItemParser {
+    int invalidItem = 0;
+
     public List<Item> parseItemList(String valueToParse) {
-        int invalidItem = 0;
         List<Item> groceryList = new ArrayList<>();
         String[] itemsUnparsed = valueToParse.split("##");
         for (String items : itemsUnparsed) {
